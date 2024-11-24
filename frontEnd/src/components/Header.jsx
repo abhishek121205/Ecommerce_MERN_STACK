@@ -9,6 +9,7 @@ import SummaryApi from "../common/commonApi";
 import { toast } from "react-toastify";
 import { setUserDetails } from "../store/userSlice";
 import Context from "../context";
+// import LOGOIMAGE from "../assest/logo-6.jpg"
 
 const Header = () => {
   const user = useSelector((state) => state?.user?.user);
@@ -56,7 +57,8 @@ const Header = () => {
       <div className="h-full container flex items-center justify-between mx-auto px-4">
         <div>
           <Link to={"/"}>
-            <Logo w={90} h={50} />
+            <Logo w={100} h={50} />
+            {/* <img src={LOGOIMAGE} alt="" width={"50px"} height={"100px"} style={{backgroundBlendMode:"multiply"}} /> */}
           </Link>
         </div>
 
