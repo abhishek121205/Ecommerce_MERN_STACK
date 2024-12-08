@@ -1,5 +1,5 @@
 const express = require("express")
-const { userSignUp, userLogin, userDetails, userLogout, allUsers, updateUser, addToCart, addToCartCounter, viewCartProducts, updateCart , deleteProduct } = require("../controllers/user_controller")
+const { userSignUp, userLogin, userDetails, userLogout, allUsers, updateUser, addToCart, addToCartCounter, viewCartProducts, updateCart , deleteProduct, deleteUser } = require("../controllers/user_controller")
 const { authToken } = require("../middleware/authToken")
 
 const router = express.Router()
@@ -11,6 +11,7 @@ router.get("/logout",userLogout)
 
 router.get("/allUsers",authToken, allUsers)
 router.post("/updateUser",authToken, updateUser)
+router.delete("/deleteUser",authToken, deleteUser)
 
 router.post("/addToCart",authToken, addToCart)
 router.get("/addToCartCounter",authToken, addToCartCounter)

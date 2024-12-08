@@ -1,4 +1,4 @@
-const backendDomain = "http://localhost:8010"
+const backendDomain = import.meta.env.VITE_APP_BACKEND_URL //"http://localhost:8010"
 
 const SummaryApi = {
     // user routers
@@ -44,6 +44,10 @@ const SummaryApi = {
     },
     deleteCartProduct: {
         url : `${backendDomain}/api/deleteCart`,
+        method : "DELETE"
+    },
+    deleteUser: {
+        url : `${backendDomain}/api/deleteUser`,
         method : "DELETE"
     },
     // product routers

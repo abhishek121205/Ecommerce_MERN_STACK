@@ -36,7 +36,7 @@ const ChangeUerRole = ({userName,email,role,onClose,userId,callAllUsers}) => {
   }
 
   return (
-    <div className='bg-slate-200 bg-opacity-30 fixed left-0 right-0 top-0 bottom-0 w-full h-full z-10 flex justify-center items-center'>
+    <div className='bg-slate-200  bg-opacity-30 fixed left-0 right-0 top-0 bottom-0 w-full h-full z-10 flex justify-center items-center'>
         <div className='bg-white shadow-md p-4 w-full max-w-sm'>
             <div className='flex justify-between items-baseline'>
                 <h1 className='pb-4 text-lg font-medium'>Change User Role</h1>

@@ -222,7 +222,7 @@ const addToCartCounter = async (req, res) => {
         })
 
         res.json({
-            data: {count: count},
+            data: { count: count },
             message: "ok",
             error: false,
             success: true
@@ -299,4 +299,23 @@ const deleteProduct = async (req, res) => {
         })
     }
 }
-module.exports = { userSignUp, userLogin, updateUser, userDetails, userLogout, allUsers, addToCart, addToCartCounter, viewCartProducts, updateCart, deleteProduct }
+
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.body;
+        const userData = await userModel.findByIdAndDelete(id);
+        const cartData = await addToCartModel.deleteMany({ userId: id });
+        res.status(200).json({
+            success:true,
+            message: "User Deleted Successfully"
+        })
+    } catch (error) {
+        res.json({
+            data: error.message || error,
+            error:true,
+            message: "Error in deleting product"
+        })
+    }
+}
+
+module.exports = { userSignUp, userLogin, deleteUser, updateUser, userDetails, userLogout, allUsers, addToCart, addToCartCounter, viewCartProducts, updateCart, deleteProduct }

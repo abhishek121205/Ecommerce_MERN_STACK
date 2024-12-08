@@ -12,7 +12,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SummaryApi from "./common/commonApi";
 import Context from "./context";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUserDetails } from "./store/userSlice";
 import AdminPanel from "./pages/AdminPanel";
 import AllUsers from "./pages/AllUsers";
@@ -27,7 +27,7 @@ import Order from "./pages/Order";
 function App() {
   const dispatch = useDispatch();
   const [cartProductCount, setCartProductCount] = useState(0)
-
+  const user = useSelector(state => state?.user?.user)
   const fetchUser = async () => {
     const dataResponse = await fetch(SummaryApi.currentUser.url, {
       credentials: "include",
@@ -70,13 +70,13 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/productCategory/" element={<CategoryProduct />} />
-            <Route  path = "/product/:id" element = {<ProductDetails/>} />
-            <Route  path = "/cart" element = {<Cart/>} />
-            <Route  path = "/search" element = {<SearchProduct/>} />
-            <Route  path = "/success" element = {<Success/>} />
-            <Route  path = "/cancel" element = {<Cancel/>} />
-            <Route  path = "/order" element = {<Order/>} />
-            <Route path="/adminPanel/*" element={<AdminPanel />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
+            {user && (<Route path="/cart" element={<Cart />} />)}
+            <Route path="/search" element={<SearchProduct />} />
+            {user && (<Route path="/success" element={<Success />} />)}
+            {user && (<Route path="/cancel" element={<Cancel />} />)}
+            {user && (<Route path="/order" element={<Order />} />)}
+            {user?.role == "ADMIN" && (<Route path="/adminPanel/*" element={<AdminPanel />} />)}
             <Route path="*" element={<ErrorNotFound />} />
           </Routes>
         </main>
