@@ -1,5 +1,5 @@
 const express = require("express")
-const { userSignUp, userLogin, userDetails, userLogout, allUsers, updateUser, addToCart, addToCartCounter, viewCartProducts, updateCart , deleteProduct, deleteUser } = require("../controllers/user_controller")
+const { userSignUp, userLogin, userDetails, userLogout, allUsers, updateUser, addToCart, addToCartCounter, viewCartProducts, updateCart , deleteProduct, deleteUser, resetPassword, verifyOtp, changePassword } = require("../controllers/user_controller")
 const { authToken } = require("../middleware/authToken")
 
 const router = express.Router()
@@ -18,5 +18,8 @@ router.get("/addToCartCounter",authToken, addToCartCounter)
 router.get("/viewCart",authToken, viewCartProducts)
 router.patch("/updateCart",authToken, updateCart)
 router.delete("/deleteCart/:id", deleteProduct)
+router.post("/resetPassword",resetPassword)
+router.post("/verifyOtp",verifyOtp)
+router.patch("/changePassword",changePassword)
 
 module.exports = router

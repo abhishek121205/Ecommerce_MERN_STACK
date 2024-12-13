@@ -50,6 +50,18 @@ const SummaryApi = {
         url : `${backendDomain}/api/deleteUser`,
         method : "DELETE"
     },
+    forgetPassword:{
+        url:`${backendDomain}/api/resetPassword`,
+        method : "POST"
+    },
+    verifyOtp:{
+        url:`${backendDomain}/api/verifyOtp`,
+        method : "POST"
+    },
+    changePassword:{
+        url:`${backendDomain}/api/changePassword`,
+        method : "PATCH"
+    },
     // product routers
     uploadProduct : {
         url : `${backendDomain}/product/upload-product`,

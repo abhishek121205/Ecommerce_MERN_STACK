@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const userModel = require("../model/user_model");
 const jwt = require('jsonwebtoken');
 const addToCartModel = require("../model/cart_model");
+const nodemailer = require("nodemailer")
 
 // creating user
 const userSignUp = async (req, res) => {
@@ -179,7 +180,7 @@ const addToCart = async (req, res) => {
         const { productId } = req?.body
         const currentUser = req.userId
         const isProductAvailable = await addToCartModel.findOne({ productId, userId: currentUser })
-        console.log(isProductAvailable);
+        // console.log(isProductAvailable);
 
         if (isProductAvailable) {
             return res.json({
@@ -306,16 +307,84 @@ const deleteUser = async (req, res) => {
         const userData = await userModel.findByIdAndDelete(id);
         const cartData = await addToCartModel.deleteMany({ userId: id });
         res.status(200).json({
-            success:true,
+            success: true,
             message: "User Deleted Successfully"
         })
     } catch (error) {
         res.json({
             data: error.message || error,
-            error:true,
+            error: true,
             message: "Error in deleting product"
         })
     }
 }
+let otp = 1;
+const newOtp = () => {
+    otp = Math.floor(100000 + Math.random() * 900000);
+}
 
-module.exports = { userSignUp, userLogin, deleteUser, updateUser, userDetails, userLogout, allUsers, addToCart, addToCartCounter, viewCartProducts, updateCart, deleteProduct }
+const resetPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        const user = await userModel.findOne({ email: email });
+        if (!user) throw new Error("User Not Exist");
+        // console.log(user);
+        newOtp();
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: "trigonx1212@gmail.com",
+                pass: process.env.APP_PASS
+            }
+        })
+
+        const mailerOptions = {
+            from: "trigonx1212@gmail.com",
+            to: user.email,
+            subject: "Reset Password",
+            html: `${otp}`
+        }
+
+        transporter.sendMail(mailerOptions, (err, info) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("otp sent successfullt");
+            }
+        })
+        res.status(200).json({ success: true, message: "OTP Send Successfully" });
+    } catch (error) {
+        res.status(401).json({ message: error.message || error, error: true })
+    }
+
+}
+
+const verifyOtp = (req, res) => {
+    try {
+        const { otp } = req.body;
+        if (req.body.otp == otp) {
+            return res.status(200).json({ message: "Otp verified", success: true });
+        } else {
+            throw new Error("OTP Invalid");
+        }
+    } catch (error) {
+        res.status(401).json({ message: error.message || error, error: true })
+    }
+
+};
+
+const changePassword = async (req, res) => {
+    try {
+        const { password, email } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await userModel.findOne({ email: email });
+        await userModel.findByIdAndUpdate(user.id,{password:hashedPassword})
+        res.status(200).json({ message: "Password Changes Successfully", success: true })
+
+    } catch (error) {
+        res.status(401).json({ message: "Error In Password Change", error: true })
+    }
+}
+
+module.exports = { userSignUp, resetPassword, userLogin, verifyOtp, deleteUser, updateUser, userDetails, userLogout, allUsers, addToCart, addToCartCounter, viewCartProducts, updateCart, deleteProduct, changePassword }

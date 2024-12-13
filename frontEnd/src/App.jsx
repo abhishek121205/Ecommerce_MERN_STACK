@@ -23,11 +23,13 @@ import SearchProduct from "./pages/SearchProduct";
 import Success from "./pages/Success";
 import Cancel from "./pages/Cancel";
 import Order from "./pages/Order";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   const dispatch = useDispatch();
   const [cartProductCount, setCartProductCount] = useState(0)
-  const user = useSelector(state => state?.user?.user)
+  const { user, verified } = useSelector(state => state?.user)
+
   const fetchUser = async () => {
     const dataResponse = await fetch(SummaryApi.currentUser.url, {
       credentials: "include",
@@ -68,6 +70,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            {verified.isVerified && (<Route path="/changePassword" element={<ChangePassword />} />)}
             <Route path="/signup" element={<SignUp />} />
             <Route path="/productCategory/" element={<CategoryProduct />} />
             <Route path="/product/:id" element={<ProductDetails />} />
