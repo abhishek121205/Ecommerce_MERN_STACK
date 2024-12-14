@@ -4,7 +4,7 @@ const productModel = require("../model/product_model");
 const uploadProduct = async (req, res) => {
     try {
         const sessionUserId = req.userId;
-        const { productName, brandName, category, price, sellingPrice } = req.body;
+        const { productName, brandName, category, price, sellingPrice,stock } = req.body;
 
         let check = await uploadProductPermission(sessionUserId);
         if (check) throw new Error("Permission denied");
@@ -14,6 +14,7 @@ const uploadProduct = async (req, res) => {
         if (!category) throw new Error("Category required");
         if (!price) throw new Error("Price required");
         if (!sellingPrice) throw new Error("Selling price required");
+        if (!stock) throw new Error("Stock required");
 
         const uploadProduct = await productModel.create(req.body);
 

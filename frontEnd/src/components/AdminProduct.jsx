@@ -42,12 +42,17 @@ const AdminProduct = ({ data, fetchdata }) => {
                         }
                     </p>
                 </div>
-                <div className='w-full flex justify-end gap-2'>
-                    <div className='w-fit p-2 bg-green-100 hover:bg-green-600 rounded-full hover:text-white cursor-pointer' onClick={() => setEditProduct(true)}>
-                        <MdModeEditOutline />
+                <div className='mt-2 w-full flex justify-between'>
+                    <div>
+                        <span>Stock: {data?.stock}</span>
                     </div>
-                    <div className='w-fit p-2 bg-red-100 hover:bg-red-600 rounded-full hover:text-white cursor-pointer' onClick={() => deleteProduct(data?._id)}>
-                        <MdDelete />
+                    <div className='flex gap-2'>
+                        <div className='w-fit p-2 bg-green-100 hover:bg-green-600 rounded-full hover:text-white cursor-pointer' onClick={() => setEditProduct(true)}>
+                            <MdModeEditOutline />
+                        </div>
+                        <div className='w-fit p-2 bg-red-100 hover:bg-red-600 rounded-full hover:text-white cursor-pointer' onClick={() => deleteProduct(data?._id)}>
+                            <MdDelete />
+                        </div>
                     </div>
                 </div>
             </div>

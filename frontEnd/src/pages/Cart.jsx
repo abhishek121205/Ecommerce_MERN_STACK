@@ -40,7 +40,7 @@ const Cart = () => {
     }, [])
 
 
-    const increaseQty = async (id, qty) => {
+    const increaseQty = async (id, qty, productid) => {
         const response = await fetch(SummaryApi.updateCartProduct.url, {
             method: SummaryApi.updateCartProduct.method,
             credentials: 'include',
@@ -50,7 +50,8 @@ const Cart = () => {
             body: JSON.stringify(
                 {
                     _id: id,
-                    quantity: qty + 1
+                    quantity: qty + 1,
+                    productid:productid
                 }
             )
         })
@@ -58,9 +59,12 @@ const Cart = () => {
         if (responseData.success) {
             fetchData()
         }
+        if(responseData.error){
+            toast.error(responseData.message)
+        }
     }
 
-    const decraseQty = async (id, qty) => {
+    const decraseQty = async (id, qty,productid) => {
         if (qty >= 2) {
             const response = await fetch(SummaryApi.updateCartProduct.url, {
                 method: SummaryApi.updateCartProduct.method,
@@ -71,7 +75,8 @@ const Cart = () => {
                 body: JSON.stringify(
                     {
                         _id: id,
-                        quantity: qty - 1
+                        quantity: qty - 1,
+                        productid:productid
                     }
                 )
             })
@@ -117,6 +122,9 @@ const Cart = () => {
         
         if (responseData?.id) {
             stripePromise.redirectToCheckout({ sessionId: responseData.id })
+        }
+        if(responseData.error){
+            toast.error(responseData.message)
         }
     }
 
@@ -164,9 +172,9 @@ const Cart = () => {
                                                 <p className='text-slate-600 font-semibold text-lg'>{displayINRCurrency(product?.productId?.sellingPrice * product?.quantity)}</p>
                                             </div>
                                             <div className='flex items-center gap-3 mt-1'>
-                                                <button className='border border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-6 h-6 flex justify-center items-center rounded' onClick={() => decraseQty(product?._id, product?.quantity)} >-</button>
+                                                <button className='border border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-6 h-6 flex justify-center items-center rounded' onClick={() => decraseQty(product?._id, product?.quantity,product?.productId)} >-</button>
                                                 <span>{product?.quantity}</span>
-                                                <button className='border border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-6 h-6 flex justify-center items-center rounded' onClick={() => increaseQty(product?._id, product?.quantity)} >+</button>
+                                                <button className='border border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-6 h-6 flex justify-center items-center rounded' onClick={() => increaseQty(product?._id, product?.quantity,product?.productId)} >+</button>
                                             </div>
                                         </div>
                                     </div>

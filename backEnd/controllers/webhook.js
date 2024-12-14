@@ -1,6 +1,7 @@
 const stripe = require("../config/stripe");
 const addToCartModel = require("../model/cart_model");
 const orderModel = require("../model/orderProduct_model");
+const { updateStockAfterPayment } = require("./payment_controller");
 require("dotenv").config();
 
 async function getLineItems(lineItems) {
@@ -19,13 +20,14 @@ async function getLineItems(lineItems) {
             productItems.push(productData)
         }   
     }
+    updateStockAfterPayment(productItems)
     return productItems;
 }
 const endpointSecret = process.env.STRIPE_ENDPOINT_WEBHOOK_SECRET_KEY;
 const webhooks = async (req, res) => {
     const sig = req.headers['stripe-signature'];
     const payloadString = JSON.stringify(req.body);
-    console.log("endpoint:" ,endpointSecret);
+    // console.log("endpoint:" ,endpointSecret);
 
     const header = stripe.webhooks.generateTestHeaderString({
         payload: payloadString,
@@ -40,6 +42,7 @@ const webhooks = async (req, res) => {
     }
 
     if (event.type === 'checkout.session.completed') {
+        // console.log("entered completed session");
         const session = event.data.object;
         const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
         const productDetails = await getLineItems(lineItems)

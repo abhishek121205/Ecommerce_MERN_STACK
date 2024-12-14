@@ -69,7 +69,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
+            {!user && (<Route path="/forgot-password" element={<ForgotPassword />} />)}
             {verified.isVerified && (<Route path="/changePassword" element={<ChangePassword />} />)}
             <Route path="/signup" element={<SignUp />} />
             <Route path="/productCategory/" element={<CategoryProduct />} />

@@ -10,19 +10,19 @@ import SummaryApi from '../common/commonApi';
 
 const AdminEditProduct = ({ onClose, productData, fetchdata }) => {
 
-    const [data, setData] = useState({...productData})
+    const [data, setData] = useState({ ...productData })
     const [openFullScreenImage, setOpenFullScreenImage] = useState(false)
     const [fullScreenImage, setFullScreenImage] = useState("")
 
     const handleOnChange = (e) => {
         const { name, value } = e.target
-        setData({...data,[name]: value})
+        setData({ ...data, [name]: value })
     }
 
     const handleUploadProduct = async (e) => {
         const file = e.target.files[0]
         const uploadImageCloudinary = await uploadImage(file)
-        setData({...data,productImage: [...data.productImage, uploadImageCloudinary.url]})
+        setData({ ...data, productImage: [...data.productImage, uploadImageCloudinary.url] })
     }
 
     const handleDeleteProductImage = async (index) => {
@@ -176,6 +176,17 @@ const AdminEditProduct = ({ onClose, productData, fetchdata }) => {
                         onChange={handleOnChange}
                         className='p-2 bg-slate-100 border rounded'
                         required
+                    />
+
+                    <label htmlFor="stock" className="mt-3">Stock :</label>
+                    <input
+                        type="number"
+                        id="stock"
+                        name="stock"
+                        placeholder="enter stock"
+                        value={data.stock}
+                        onChange={handleOnChange}
+                        className="p-2 bg-slate-100 border rounded"
                     />
 
                     <label htmlFor='description' className='mt-3'>Description :</label>

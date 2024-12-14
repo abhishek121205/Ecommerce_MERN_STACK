@@ -69,7 +69,6 @@ const ProductDetails = () => {
     setZoomImage(false)
   }
 
-
   const handleAddToCart = async (e, id) => {
     await addToCart(e, id)
     fetchUserAddToCart()
@@ -79,7 +78,6 @@ const ProductDetails = () => {
     await addToCart(e, id)
     fetchUserAddToCart()
     navigate("/cart")
-
   }
 
   return (

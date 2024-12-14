@@ -2,7 +2,8 @@ const bcrypt = require("bcrypt");
 const userModel = require("../model/user_model");
 const jwt = require('jsonwebtoken');
 const addToCartModel = require("../model/cart_model");
-const nodemailer = require("nodemailer")
+const nodemailer = require("nodemailer");
+const productModel = require("../model/product_model");
 
 // creating user
 const userSignUp = async (req, res) => {
@@ -179,9 +180,9 @@ const addToCart = async (req, res) => {
     try {
         const { productId } = req?.body
         const currentUser = req.userId
+        const checkStock = await productModel.findOne({_id:productId})
+        if(checkStock?.stock <= 0) throw new Error ("Product is out of stock")        
         const isProductAvailable = await addToCartModel.findOne({ productId, userId: currentUser })
-        // console.log(isProductAvailable);
-
         if (isProductAvailable) {
             return res.json({
                 message: "Already exits in Add to cart",
@@ -263,6 +264,10 @@ const updateCart = async (req, res) => {
     try {
         const addToCartProductId = req?.body?._id
         const qty = req.body.quantity
+        const productid = req?.body?.productid
+        const checkStock = await productModel.findOne({_id:productid._id});
+        if(qty > checkStock.stock) throw new Error("No More Quantity Available")
+        
         const updateProduct = await addToCartModel.updateOne({ _id: addToCartProductId }, {
             ...(qty && { quantity: qty })
         })
@@ -285,7 +290,7 @@ const updateCart = async (req, res) => {
 const deleteProduct = async (req, res) => {
     try {
         const addToCartProductId = req?.params?.id
-        console.log(addToCartProductId);
+        // console.log(addToCartProductId);
         await addToCartModel.findByIdAndDelete(addToCartProductId)
         res.status(200).json({
             message: "Product Deleted",

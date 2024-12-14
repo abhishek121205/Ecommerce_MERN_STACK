@@ -1,13 +1,19 @@
 const stripe = require("../config/stripe");
 const orderModel = require("../model/orderProduct_model");
+const productModel = require("../model/product_model");
 const userModel = require("../model/user_model");
 
 const checkoutController = async (req, res) => {
     try {
         const { cartItems } = req.body;
-        // console.log("cartItems:", cartItems);
-
         const user = await userModel.findOne({ _id: req.userId })
+
+        for (const item of cartItems) {
+            const product = await productModel.findById(item.productId._id);
+            if (!product) throw new Error(`Product with ID ${item.productId._id} not found.`)
+            if (product.stock < item.quantity) throw new Error(`Insufficient stock for product ${product.productName}. Available: ${product.stock}, Requested: ${item.quantity}.`)
+        }
+
         const params = {
             submit_type: 'pay',
             mode: "payment",
@@ -36,8 +42,9 @@ const checkoutController = async (req, res) => {
                         unit_amount: val.productId.sellingPrice * 100  // Assuming sellingPrice is in rupees
                     },
                     adjustable_quantity: {
-                        enabled: true,
-                        minimum: 1
+                        enabled: false,
+                        // minimum: 1,
+                        // maximum:val.productId.stock
                     },
                     quantity: val.quantity
                 }
@@ -102,4 +109,14 @@ const allOrderController = async (req, res) => {
     }
 }
 
-module.exports = { checkoutController, orderController, allOrderController }
+const updateStockAfterPayment = async (cartItems) => {
+    for (const item of cartItems) {
+        await productModel.findByIdAndUpdate(
+            item.productId,
+            { $inc: { stock: -item.quantity } },
+            { new: true }
+        );
+    }
+};
+
+module.exports = { checkoutController, orderController, allOrderController, updateStockAfterPayment }

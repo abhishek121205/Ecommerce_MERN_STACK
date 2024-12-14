@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const UploadProduct = ({ onClose }) => {
-  const [data, setData] = useState({ productImage: []});
+  const [data, setData] = useState({ productImage: [] });
   const [activeImage, setActiveImage] = useState("")
   const [openFullScreen, setOpenFullScreen] = useState(false)
   const navigate = useNavigate()
@@ -31,26 +31,26 @@ const UploadProduct = ({ onClose }) => {
     setData({ ...data, productImage: [...newProductImage] })
   }
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const response = await fetch(SummaryApi.uploadProduct.url,{
-      method : SummaryApi.uploadProduct.method,
-      credentials : "include",
-      headers : {
-        "content-type" : "application/json",
-        "Accepts" : "application/json"
+    const response = await fetch(SummaryApi.uploadProduct.url, {
+      method: SummaryApi.uploadProduct.method,
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+        "Accepts": "application/json"
       },
-      body : JSON.stringify(data)
+      body: JSON.stringify(data)
     })
 
     const addedData = await response.json();
 
-    if(addedData.success){
+    if (addedData.success) {
       toast.success(addedData.message)
       onClose()
     }
-    if(addedData.error){
+    if (addedData.error) {
       toast.error(addedData.message)
     }
   }
@@ -157,6 +157,17 @@ const UploadProduct = ({ onClose }) => {
             name="sellingPrice"
             placeholder="enter selling Price"
             value={data.sellingPrice}
+            onChange={handleOnChange}
+            className="p-2 bg-slate-100 border rounded"
+          />
+
+          <label htmlFor="stock" className="mt-3">Stock :</label>
+          <input
+            type="number"
+            id="stock"
+            name="stock"
+            placeholder="enter stock"
+            value={data.stock}
             onChange={handleOnChange}
             className="p-2 bg-slate-100 border rounded"
           />
