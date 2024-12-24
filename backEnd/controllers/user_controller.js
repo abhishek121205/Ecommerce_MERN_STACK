@@ -64,7 +64,7 @@ const userLogin = async (req, res) => {
             const tokenOption = {
                 httpOnly: true,
                 secure: false,
-                sameSite: "None"
+                sameSite: 'None'
             }
 
             res.cookie("token", token, tokenOption).status(200).json({
@@ -110,7 +110,7 @@ const userLogout = async (req, res) => {
         const tokenOption = {
             httpOnly: true,
             secure: false,
-            sameSite: "None"
+            sameSite: 'None'
         }
         res.clearCookie("token",tokenOption);
 
